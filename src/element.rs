@@ -28,8 +28,8 @@ impl IconElement {
     /// Creates an icon element with the given OSType and data payload.
     pub fn new(ostype: OSType, data: Vec<u8>) -> IconElement {
         IconElement {
-            ostype: ostype,
-            data: data,
+            ostype,
+            data,
         }
     }
 
