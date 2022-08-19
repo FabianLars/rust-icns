@@ -3,8 +3,13 @@ use png;
 use std::io::{self, Read, Write};
 
 impl Image {
-    /// Reads an image from a PNG file.
-    pub fn read_png<R: Read>(mut input: R) -> io::Result<Image> {
+    /// Reads the raw pixel data from a PNG file.
+    pub fn read_png<R: Read>(input: R) -> io::Result<Image> {
+        Image::decode_from_png(input)
+    }
+
+    /// Reads an image from a PNG file without changing the data (useful for compressed files).
+    pub fn read_png_unchanged<R: Read>(mut input: R) -> io::Result<Image> {
         let mut v = Vec::new();
         input.read_to_end(&mut v)?;
         let image = Image::decode_from_png(v.as_slice())?;
@@ -17,7 +22,7 @@ impl Image {
     }
 
     /// Internal function to decode a PNG.
-    pub fn decode_from_png<R: Read>(input: R) -> io::Result<Image> {
+    pub(crate) fn decode_from_png<R: Read>(input: R) -> io::Result<Image> {
         let decoder = png::Decoder::new(input);
         let mut reader = decoder.read_info()?;
         let info = reader.info();

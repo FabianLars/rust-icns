@@ -735,6 +735,25 @@ mod tests {
             253, 198, 70, 247, 56, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130,
         ];
         let image = Image::read_png(Cursor::new(&png)).expect("failed to read PNG");
+        assert_eq!(image.pixel_format(), PixelFormat::RGBA);
+        assert_eq!(image.width(), 2);
+        assert_eq!(image.height(), 2);
+        let rgba_data: Vec<u8> = vec![
+            255, 0, 0, 63, 0, 255, 0, 127, 0, 0, 255, 191, 127, 127, 127, 255,
+        ];
+        assert_eq!(image.data(), &rgba_data as &[u8]);
+    }
+
+    #[test]
+    #[cfg(feature = "pngio")]
+    fn read_rgba_png_unchanged() {
+        let png: Vec<u8> = vec![
+            137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 2, 0, 0, 0, 2,
+            8, 6, 0, 0, 0, 114, 182, 13, 36, 0, 0, 0, 29, 73, 68, 65, 84, 120, 1, 1, 18, 0, 237,
+            255, 1, 255, 0, 0, 63, 1, 255, 0, 64, 1, 0, 0, 255, 191, 127, 127, 128, 64, 49, 125, 5,
+            253, 198, 70, 247, 56, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130,
+        ];
+        let image = Image::read_png_unchanged(Cursor::new(&png)).expect("failed to read PNG");
         assert_eq!(image.data(), &png as &[u8]);
         let image = image.convert_to(PixelFormat::RGBA);
         assert_eq!(image.pixel_format(), PixelFormat::RGBA);
