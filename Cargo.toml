@@ -1,9 +1,9 @@
 [package]
 name = "icns"
-version = "0.3.1"
-authors = ["Matthew D. Steele <mdsteele@alum.mit.edu>"]
+version = "0.3.2"
+authors = ["Matthew D. Steele <mdsteele@alum.mit.edu>", "FabianLars <fabianlars@fabianlars.de>"]
 description = "A library for encoding/decoding Apple Icon Image (.icns) files."
-repository = "https://github.com/mdsteele/rust-icns"
+repository = "https://github.com/FabianLars/rust-icns"
 keywords = ["icns", "icon", "image"]
 license = "MIT"
 readme = "README.md"
