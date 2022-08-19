@@ -170,12 +170,8 @@ impl IconFamily {
 
 #[cfg(test)]
 mod tests {
-    use super::super::element::IconElement;
-    use super::super::icontype::{IconType, OSType};
-    use super::super::image::{Image, PixelFormat};
-    use super::*;
-    use std::fs::File;
-    use std::io::{BufReader, Cursor};
+    use crate::{IconElement, IconFamily, IconType, Image, OSType, PixelFormat};
+    use std::io::Cursor;
 
     #[test]
     fn icon_with_type() {
@@ -226,28 +222,5 @@ mod tests {
             b"icns\0\0\0\x1fquux\0\0\0\x0efoobarbaz!\0\0\0\x09#",
             &output as &[u8]
         );
-    }
-
-    #[test]
-    #[cfg(feature = "pngio")]
-    fn png_unchanged() {
-        let mut icon_family = IconFamily::new();
-        let mut png_data = Vec::new();
-        BufReader::new(File::open("tests/png/256x256.png").unwrap())
-            .read_to_end(&mut png_data)
-            .unwrap();
-        let image = Image::read_png(png_data.as_slice()).unwrap();
-        icon_family.add_icon(&image).unwrap();
-
-        // Save the updated icon family to a new ICNS 'file'.
-        let mut out = Vec::new();
-        icon_family.write(&mut out).unwrap();
-
-        // Read it in again and check the PNG is untouched.
-        let icon_family = IconFamily::read(out.as_slice()).unwrap();
-        let image = icon_family
-            .get_icon_with_type(IconType::RGBA32_256x256)
-            .unwrap();
-        assert_eq!(image.data(), png_data.as_slice());
     }
 }
