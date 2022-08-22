@@ -103,6 +103,7 @@ impl Image {
                     PixelFormat::GrayAlpha => rgba_to_grayalpha(&self.data),
                     PixelFormat::Gray => rgba_to_gray(&self.data),
                     PixelFormat::Alpha => rgba_to_alpha(&self.data),
+                    PixelFormat::PNG => return self.make_png_image(),
                 }
             }
             PixelFormat::RGB => {
@@ -112,6 +113,7 @@ impl Image {
                     PixelFormat::GrayAlpha => rgb_to_grayalpha(&self.data),
                     PixelFormat::Gray => rgb_to_gray(&self.data),
                     PixelFormat::Alpha => rgb_to_alpha(&self.data),
+                    PixelFormat::PNG => return self.make_png_image(),
                 }
             }
             PixelFormat::GrayAlpha => {
@@ -121,6 +123,7 @@ impl Image {
                     PixelFormat::GrayAlpha => self.data.clone(),
                     PixelFormat::Gray => grayalpha_to_gray(&self.data),
                     PixelFormat::Alpha => grayalpha_to_alpha(&self.data),
+                    PixelFormat::PNG => return self.make_png_image(),
                 }
             }
             PixelFormat::Gray => {
@@ -130,6 +133,7 @@ impl Image {
                     PixelFormat::GrayAlpha => gray_to_grayalpha(&self.data),
                     PixelFormat::Gray => self.data.clone(),
                     PixelFormat::Alpha => gray_to_alpha(&self.data),
+                    PixelFormat::PNG => return self.make_png_image(),
                 }
             }
             PixelFormat::Alpha => {
@@ -139,6 +143,13 @@ impl Image {
                     PixelFormat::GrayAlpha => alpha_to_grayalpha(&self.data),
                     PixelFormat::Gray => alpha_to_gray(&self.data),
                     PixelFormat::Alpha => self.data.clone(),
+                    PixelFormat::PNG => return self.make_png_image(),
+                }
+            }
+            PixelFormat::PNG => {
+                match format {
+                    PixelFormat::PNG => self.data.clone(),
+                    _ => return Image::decode_from_png(&*self.data).expect("Unable to read PNG").convert_to(format),
                 }
             }
         };
@@ -147,6 +158,17 @@ impl Image {
             width: self.width,
             height: self.height,
             data: new_data,
+        }
+    }
+
+    fn make_png_image(&self) -> Image {
+        let mut v = Vec::new();
+        self.write_png(&mut v).expect("Unable to write to PNG");
+        Image {
+            format: PixelFormat::PNG,
+            width: self.width,
+            height: self.height,
+            data: v.into_boxed_slice()
         }
     }
 }
@@ -178,6 +200,8 @@ pub enum PixelFormat {
     /// 8-bit alpha mask with no color.  Each pixel is one byte (0=transparent,
     /// 255=opaque).
     Alpha,
+    /// PNG data.
+    PNG,
 }
 
 impl PixelFormat {
@@ -190,6 +214,7 @@ impl PixelFormat {
             PixelFormat::GrayAlpha => 16,
             PixelFormat::Gray => 8,
             PixelFormat::Alpha => 8,
+            PixelFormat::PNG => panic!("Unable to know definite number of bits per pixel for PNG"),
         }
     }
 }
@@ -727,6 +752,8 @@ mod tests {
                  69, 78, 68, 174, 66, 96, 130];
         let image = Image::read_png(Cursor::new(&png))
             .expect("failed to read PNG");
+        assert_eq!(image.data(), &png as &[u8]);
+        let image = image.convert_to(PixelFormat::RGBA);
         assert_eq!(image.pixel_format(), PixelFormat::RGBA);
         assert_eq!(image.width(), 2);
         assert_eq!(image.height(), 2);
@@ -765,4 +792,6 @@ mod tests {
             assert_eq!(image_1.data(), image_2.data());
         }
     }
+
+
 }

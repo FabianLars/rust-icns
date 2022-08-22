@@ -5,7 +5,20 @@ use image::{Image, PixelFormat};
 impl Image {
 
     /// Reads an image from a PNG file.
-    pub fn read_png<R: Read>(input: R) -> io::Result<Image> {
+    pub fn read_png<R: Read>(mut input: R) -> io::Result<Image> {
+        let mut v = Vec::new();
+        input.read_to_end(&mut v)?;
+        let image = Image::decode_from_png(v.as_slice())?;
+        Ok(Image {
+            format: PixelFormat::PNG,
+            width: image.width,
+            height: image.height,
+            data: v.into_boxed_slice()
+        })
+    }
+
+    /// Internal function to decode a PNG.
+    pub fn decode_from_png<R: Read>(input: R) -> io::Result<Image> {
         let decoder = png::Decoder::new(input);
         let (info, mut reader) = decoder.read_info()?;
         let pixel_format = match info.color_type {
@@ -36,7 +49,7 @@ impl Image {
     }
 
     /// Writes the image to a PNG file.
-    pub fn write_png<W: Write>(&self, output: W) -> io::Result<()> {
+    pub fn write_png<W: Write>(&self, mut output: W) -> io::Result<()> {
         let color_type = match self.format {
             PixelFormat::RGBA => png::ColorType::RGBA,
             PixelFormat::RGB => png::ColorType::RGB,
@@ -45,7 +58,10 @@ impl Image {
             PixelFormat::Alpha => {
                 return self.convert_to(PixelFormat::GrayAlpha)
                     .write_png(output);
-            }
+            },
+            PixelFormat::PNG => {
+                return output.write(&self.data).map(|_| ());
+            },
         };
         let mut encoder = png::Encoder::new(output, self.width, self.height);
         encoder.set_color(color_type);
