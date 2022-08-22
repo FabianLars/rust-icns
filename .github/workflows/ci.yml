@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+
+env:
+  CARGO_INCREMENTAL: 0
+  RUST_BACKTRACE: short
+  # RUSTFLAGS: '-D warnings'
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt,clippy
+
+      - uses: Swatinem/rust-cache@v1
+        with:
+          key: ${{ secrets.CLEAR_CACHE }}
+
+      - name: Format
+        run: cargo fmt --all -- --check
+
+      - name: Compile
+        run: cargo test --no-run
+
+      - name: Test
+        run: cargo test -- --nocapture --quiet
+
+      - name: Lints
+        run: cargo clippy
