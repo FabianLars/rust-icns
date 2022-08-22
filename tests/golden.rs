@@ -78,7 +78,8 @@ fn decoder_test(icns_name: &str, icon_type: IconType, png_name: &str) {
     let family = load_icns_file(icns_name).unwrap();
     let image = family.get_icon_with_type(icon_type).unwrap();
     let reference = load_png_file(png_name).unwrap();
-    let reference = adjust_png_to_match_png_encoder_quirks(reference).convert_to(image.pixel_format());
+    let reference =
+        adjust_png_to_match_png_encoder_quirks(reference).convert_to(image.pixel_format());
     assert_images_match(&image, &reference);
 }
 

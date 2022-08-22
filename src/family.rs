@@ -20,7 +20,9 @@ pub struct IconFamily {
 impl IconFamily {
     /// Creates a new, empty icon family.
     pub fn new() -> IconFamily {
-        IconFamily { elements: Vec::new() }
+        IconFamily {
+            elements: Vec::new(),
+        }
     }
 
     /// Returns true if the icon family contains no icons nor any other
@@ -34,13 +36,14 @@ impl IconFamily {
     /// an error if there is no supported icon type matching the image
     /// dimensions.
     pub fn add_icon(&mut self, image: &Image) -> io::Result<()> {
-        if let Some(icon_type) = IconType::from_pixel_size(image.width(),
-                                                           image.height()) {
+        if let Some(icon_type) = IconType::from_pixel_size(image.width(), image.height()) {
             self.add_icon_with_type(image, icon_type)
         } else {
-            let msg = format!("no supported icon type has dimensions {}x{}",
-                              image.width(),
-                              image.height());
+            let msg = format!(
+                "no supported icon type has dimensions {}x{}",
+                image.width(),
+                image.height()
+            );
             Err(Error::new(ErrorKind::InvalidInput, msg))
         }
     }
@@ -49,16 +52,12 @@ impl IconFamily {
     /// selected type has an associated mask type, the image mask will also be
     /// added to the family.  Returns an error if the image has the wrong
     /// dimensions for the selected type.
-    pub fn add_icon_with_type(&mut self,
-                              image: &Image,
-                              icon_type: IconType)
-                              -> io::Result<()> {
+    pub fn add_icon_with_type(&mut self, image: &Image, icon_type: IconType) -> io::Result<()> {
         self.elements
             .push(IconElement::encode_image_with_type(image, icon_type)?);
         if let Some(mask_type) = icon_type.mask_type() {
             self.elements
-                .push(IconElement::encode_image_with_type(image,
-                                                               mask_type)?);
+                .push(IconElement::encode_image_with_type(image, mask_type)?);
         }
         Ok(())
     }
@@ -103,9 +102,7 @@ impl IconFamily {
     /// decoded together into a single image.  Returns an error if the
     /// element(s) for the selected type are not present in the icon family, or
     /// the if the encoded data is malformed.
-    pub fn get_icon_with_type(&self,
-                              icon_type: IconType)
-                              -> io::Result<Image> {
+    pub fn get_icon_with_type(&self, icon_type: IconType) -> io::Result<Image> {
         let element = self.find_element(icon_type)?;
         if let Some(mask_type) = icon_type.mask_type() {
             let mask = self.find_element(mask_type)?;
@@ -118,12 +115,17 @@ impl IconFamily {
     /// Private helper method.
     fn find_element(&self, icon_type: IconType) -> io::Result<&IconElement> {
         let ostype = icon_type.ostype();
-        self.elements.iter().find(|el| el.ostype == ostype).ok_or_else(|| {
-            let msg = format!("the icon family does not contain a '{}' \
+        self.elements
+            .iter()
+            .find(|el| el.ostype == ostype)
+            .ok_or_else(|| {
+                let msg = format!(
+                    "the icon family does not contain a '{}' \
                                element",
-                              ostype);
-            Error::new(ErrorKind::NotFound, msg)
-        })
+                    ostype
+                );
+                Error::new(ErrorKind::NotFound, msg)
+            })
     }
 
     /// Reads an icon family from an ICNS file.
@@ -168,19 +170,21 @@ impl IconFamily {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::super::element::IconElement;
     use super::super::icontype::{IconType, OSType};
     use super::super::image::{Image, PixelFormat};
-    use std::io::{BufReader, Cursor};
+    use super::*;
     use std::fs::File;
+    use std::io::{BufReader, Cursor};
 
     #[test]
     fn icon_with_type() {
         let mut family = IconFamily::new();
         assert!(!family.has_icon_with_type(IconType::RGB24_16x16));
         let image = Image::new(PixelFormat::Gray, 16, 16);
-        family.add_icon_with_type(&image, IconType::RGB24_16x16).unwrap();
+        family
+            .add_icon_with_type(&image, IconType::RGB24_16x16)
+            .unwrap();
         assert!(family.has_icon_with_type(IconType::RGB24_16x16));
         assert!(family.get_icon_with_type(IconType::RGB24_16x16).is_ok());
     }
@@ -210,14 +214,18 @@ mod tests {
     #[test]
     fn write_icon_family_with_fake_elements() {
         let mut family = IconFamily::new();
-        family.elements
+        family
+            .elements
             .push(IconElement::new(OSType(*b"quux"), b"foobar".to_vec()));
-        family.elements
+        family
+            .elements
             .push(IconElement::new(OSType(*b"baz!"), b"#".to_vec()));
         let mut output: Vec<u8> = vec![];
         family.write(&mut output).expect("write failed");
-        assert_eq!(b"icns\0\0\0\x1fquux\0\0\0\x0efoobarbaz!\0\0\0\x09#",
-                   &output as &[u8]);
+        assert_eq!(
+            b"icns\0\0\0\x1fquux\0\0\0\x0efoobarbaz!\0\0\0\x09#",
+            &output as &[u8]
+        );
     }
 
     #[test]
@@ -225,7 +233,9 @@ mod tests {
     fn png_unchanged() {
         let mut icon_family = IconFamily::new();
         let mut png_data = Vec::new();
-        BufReader::new(File::open("tests/png/256x256.png").unwrap()).read_to_end(&mut png_data).unwrap();
+        BufReader::new(File::open("tests/png/256x256.png").unwrap())
+            .read_to_end(&mut png_data)
+            .unwrap();
         let image = Image::read_png(png_data.as_slice()).unwrap();
         icon_family.add_icon(&image).unwrap();
 
@@ -235,7 +245,9 @@ mod tests {
 
         // Read it in again and check the PNG is untouched.
         let icon_family = IconFamily::read(out.as_slice()).unwrap();
-        let image = icon_family.get_icon_with_type(IconType::RGBA32_256x256).unwrap();
+        let image = icon_family
+            .get_icon_with_type(IconType::RGBA32_256x256)
+            .unwrap();
         assert_eq!(image.data(), png_data.as_slice());
     }
 }
