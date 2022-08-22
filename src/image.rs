@@ -26,9 +26,9 @@ impl Image {
         let data_bits = format.bits_per_pixel() * width * height;
         let data_bytes = ((data_bits + 7) / 8) as usize;
         Image {
-            format: format,
-            width: width,
-            height: height,
+            format,
+            width,
+            height,
             data: vec![0u8; data_bytes].into_boxed_slice(),
         }
     }
@@ -45,9 +45,9 @@ impl Image {
         let data_bytes = ((data_bits + 7) / 8) as usize;
         if data.len() == data_bytes {
             Ok(Image {
-                format: format,
-                width: width,
-                height: height,
+                format,
+                width,
+                height,
                 data: data.into_boxed_slice(),
             })
         } else {
@@ -149,7 +149,7 @@ impl Image {
             },
         };
         Image {
-            format: format,
+            format,
             width: self.width,
             height: self.height,
             data: new_data,

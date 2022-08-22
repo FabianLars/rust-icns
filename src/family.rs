@@ -6,7 +6,7 @@ use super::icontype::IconType;
 use super::image::Image;
 
 /// The first four bytes of an ICNS file:
-const ICNS_MAGIC_LITERAL: &'static [u8; 4] = b"icns";
+const ICNS_MAGIC_LITERAL: &[u8; 4] = b"icns";
 
 /// The length of an icon family header, in bytes:
 const ICON_FAMILY_HEADER_LENGTH: u32 = 8;
