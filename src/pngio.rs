@@ -19,10 +19,11 @@ impl Image {
     /// Internal function to decode a PNG.
     pub fn decode_from_png<R: Read>(input: R) -> io::Result<Image> {
         let decoder = png::Decoder::new(input);
-        let (info, mut reader) = decoder.read_info()?;
+        let mut reader = decoder.read_info()?;
+        let info = reader.info();
         let pixel_format = match info.color_type {
-            png::ColorType::RGBA => PixelFormat::RGBA,
-            png::ColorType::RGB => PixelFormat::RGB,
+            png::ColorType::Rgba => PixelFormat::RGBA,
+            png::ColorType::Rgb => PixelFormat::RGB,
             png::ColorType::GrayscaleAlpha => PixelFormat::GrayAlpha,
             png::ColorType::Grayscale => PixelFormat::Gray,
             _ => {
@@ -49,7 +50,7 @@ impl Image {
             ));
         }
         let mut image = Image::new(pixel_format, info.width, info.height);
-        assert_eq!(image.data().len(), info.buffer_size());
+        assert_eq!(image.data().len(), reader.output_buffer_size());
         reader.next_frame(image.data_mut())?;
         Ok(image)
     }
@@ -57,8 +58,8 @@ impl Image {
     /// Writes the image to a PNG file.
     pub fn write_png<W: Write>(&self, mut output: W) -> io::Result<()> {
         let color_type = match self.format {
-            PixelFormat::RGBA => png::ColorType::RGBA,
-            PixelFormat::RGB => png::ColorType::RGB,
+            PixelFormat::RGBA => png::ColorType::Rgba,
+            PixelFormat::RGB => png::ColorType::Rgb,
             PixelFormat::GrayAlpha => png::ColorType::GrayscaleAlpha,
             PixelFormat::Gray => png::ColorType::Grayscale,
             PixelFormat::Alpha => {
@@ -76,8 +77,14 @@ impl Image {
             .write_image_data(&self.data)
             .map_err(|err| match err {
                 png::EncodingError::IoError(err) => err,
-                png::EncodingError::Format(msg) => {
-                    io::Error::new(io::ErrorKind::InvalidData, msg.into_owned())
+                png::EncodingError::Format(err) => {
+                    io::Error::new(io::ErrorKind::InvalidData, err.to_string())
+                }
+                png::EncodingError::Parameter(err) => {
+                    io::Error::new(io::ErrorKind::InvalidInput, err.to_string())
+                }
+                png::EncodingError::LimitsExceeded => {
+                    io::Error::new(io::ErrorKind::Other, err.to_string())
                 }
             })
     }
