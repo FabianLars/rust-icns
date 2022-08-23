@@ -2,7 +2,6 @@
   "gitSiteUrl": "https://github.com/tauri-apps/rust-icns/",
   "pkgManagers": {
     "rust": {
-      "errorOnVersionRange": "^2.0.0-0",
       "version": true,
       "getPublishedVersion": "cargo search ${ pkgFile.pkg.package.name } --limit 1 | sed -nE \"s/^[^\\\"]*\\\"//; s/\\\".*//1p\"",
       "prepublish": [
