@@ -21,7 +21,7 @@ to use the library.
 
 ```rust
 extern crate icns;
-use icns::{IconFamily, IconType, Image};
+use tauri_icns::{IconFamily, IconType, Image};
 use std::fs::File;
 use std::io::{BufReader, BufWriter};
 

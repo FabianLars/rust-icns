@@ -88,7 +88,7 @@ impl IconType {
     ///
     /// # Examples
     /// ```
-    /// use icns::IconType;
+    /// use tauri_icns::IconType;
     /// assert_eq!(IconType::from_pixel_size(48, 48),
     ///            Some(IconType::RGB24_48x48));
     /// assert_eq!(IconType::from_pixel_size(256, 256),
@@ -115,7 +115,7 @@ impl IconType {
     ///
     /// # Examples
     /// ```
-    /// use icns::IconType;
+    /// use tauri_icns::IconType;
     /// assert_eq!(IconType::from_pixel_size_and_density(48, 48, 1),
     ///            Some(IconType::RGB24_48x48));
     /// assert_eq!(IconType::from_pixel_size_and_density(256, 256, 1),
@@ -170,7 +170,7 @@ impl IconType {
     ///
     /// # Examples
     /// ```
-    /// use icns::IconType;
+    /// use tauri_icns::IconType;
     /// assert!(!IconType::RGB24_16x16.is_mask());
     /// assert!(IconType::Mask8_16x16.is_mask());
     /// assert!(!IconType::RGBA32_16x16.is_mask());
@@ -191,7 +191,7 @@ impl IconType {
     ///
     /// # Examples
     /// ```
-    /// use icns::IconType;
+    /// use tauri_icns::IconType;
     /// assert_eq!(IconType::RGB24_16x16.mask_type(),
     ///            Some(IconType::Mask8_16x16));
     /// assert_eq!(IconType::Mask8_16x16.mask_type(), None);
@@ -213,7 +213,7 @@ impl IconType {
     ///
     /// # Examples
     /// ```
-    /// use icns::IconType;
+    /// use tauri_icns::IconType;
     /// assert_eq!(IconType::Mask8_128x128.pixel_width(), 128);
     /// assert_eq!(IconType::RGBA32_256x256.pixel_width(), 256);
     /// assert_eq!(IconType::RGBA32_256x256_2x.pixel_width(), 512);
@@ -228,7 +228,7 @@ impl IconType {
     ///
     /// # Examples
     /// ```
-    /// use icns::IconType;
+    /// use tauri_icns::IconType;
     /// assert_eq!(IconType::Mask8_128x128.pixel_height(), 128);
     /// assert_eq!(IconType::RGBA32_256x256.pixel_height(), 256);
     /// assert_eq!(IconType::RGBA32_256x256_2x.pixel_height(), 512);
@@ -242,7 +242,7 @@ impl IconType {
     ///
     /// # Examples
     /// ```
-    /// use icns::IconType;
+    /// use tauri_icns::IconType;
     /// assert_eq!(IconType::Mask8_128x128.pixel_density(), 1);
     /// assert_eq!(IconType::RGBA32_256x256.pixel_density(), 1);
     /// assert_eq!(IconType::RGBA32_256x256_2x.pixel_density(), 2);
@@ -264,7 +264,7 @@ impl IconType {
     ///
     /// # Examples
     /// ```
-    /// use icns::IconType;
+    /// use tauri_icns::IconType;
     /// assert_eq!(IconType::Mask8_128x128.screen_width(), 128);
     /// assert_eq!(IconType::RGBA32_256x256.screen_width(), 256);
     /// assert_eq!(IconType::RGBA32_256x256_2x.screen_width(), 256);
@@ -299,7 +299,7 @@ impl IconType {
     ///
     /// # Examples
     /// ```
-    /// use icns::IconType;
+    /// use tauri_icns::IconType;
     /// assert_eq!(IconType::Mask8_128x128.screen_height(), 128);
     /// assert_eq!(IconType::RGBA32_256x256.screen_height(), 256);
     /// assert_eq!(IconType::RGBA32_256x256_2x.screen_height(), 256);

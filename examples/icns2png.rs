@@ -19,14 +19,14 @@
 //! See https://en.wikipedia.org/wiki/Apple_Icon_Image_format#Icon_types for a
 //! list of possible OSTypes.
 
-extern crate icns;
+extern crate tauri_icns;
 
-use icns::{IconFamily, IconType, OSType};
 use std::env;
 use std::fs::File;
 use std::io::{BufReader, BufWriter};
 use std::path::Path;
 use std::str::FromStr;
+use tauri_icns::{IconFamily, IconType, OSType};
 
 fn main() {
     let num_args = env::args().count();

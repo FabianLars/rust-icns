@@ -98,7 +98,7 @@
 //! # Example usage
 //!
 //! ```no_run
-//! use icns::{IconFamily, IconType, Image};
+//! use tauri_icns::{IconFamily, IconType, Image};
 //! use std::fs::File;
 //! use std::io::{BufReader, BufWriter};
 //!

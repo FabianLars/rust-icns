@@ -1,9 +1,9 @@
-extern crate icns;
+extern crate tauri_icns;
 
-use icns::IconFamily;
 use std::env;
 use std::fs::File;
 use std::io::BufReader;
+use tauri_icns::IconFamily;
 
 fn main() {
     if env::args().count() != 2 {

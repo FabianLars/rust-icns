@@ -1,8 +1,8 @@
-extern crate icns;
+extern crate tauri_icns;
 
-use icns::{IconFamily, IconType, Image, PixelFormat};
 use std::fs::File;
 use std::io::{self, BufReader};
+use tauri_icns::{IconFamily, IconType, Image, PixelFormat};
 
 #[test]
 fn decode_is32() {
