@@ -1,9 +1,9 @@
 [package]
-name = "icns"
-version = "0.3.1"
-authors = ["Matthew D. Steele <mdsteele@alum.mit.edu>"]
+name = "tauri-icns"
+version = "0.0.0"
+authors = ["Matthew D. Steele <mdsteele@alum.mit.edu>", "Tauri Programme within The Commons Conservancy"]
 description = "A library for encoding/decoding Apple Icon Image (.icns) files."
-repository = "https://github.com/mdsteele/rust-icns"
+repository = "https://github.com/tauri-apps/rust-icns"
 keywords = ["icns", "icon", "image"]
 license = "MIT"
 readme = "README.md"
