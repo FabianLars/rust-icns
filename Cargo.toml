@@ -1,10 +1,13 @@
 [package]
 name = "tauri-icns"
-version = "0.0.0"
-authors = ["Matthew D. Steele <mdsteele@alum.mit.edu>", "Tauri Programme within The Commons Conservancy"]
+version = "0.1.0"
+authors = [
+  "Matthew D. Steele <mdsteele@alum.mit.edu>",
+  "Tauri Programme within The Commons Conservancy"
+]
 description = "A library for encoding/decoding Apple Icon Image (.icns) files."
 repository = "https://github.com/tauri-apps/rust-icns"
-keywords = ["icns", "icon", "image"]
+keywords = [ "icns", "icon", "image" ]
 license = "MIT"
 readme = "README.md"
 
@@ -13,5 +16,5 @@ byteorder = "1"
 png = { version = "0.17", optional = true }
 
 [features]
-default = ["pngio"]
-pngio = ["png"]
+default = [ "pngio" ]
+pngio = [ "png" ]
