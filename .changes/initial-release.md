@@ -1,5 +1,0 @@
----
-"icns": minor
----
-
-Initial release.
