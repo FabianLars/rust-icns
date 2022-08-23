@@ -22,14 +22,14 @@
 //! this case, the dimensions of the input image must match the particular
 //! chosen icon type.
 
-extern crate icns;
+extern crate tauri_icns;
 
-use icns::{IconFamily, IconType, Image, OSType};
 use std::env;
 use std::fs::File;
 use std::io::{BufReader, BufWriter};
 use std::path::Path;
 use std::str::FromStr;
+use tauri_icns::{IconFamily, IconType, Image, OSType};
 
 fn main() {
     let num_args = env::args().count();
